@@ -75,18 +75,18 @@ def C_compile(main_C_output_path, main_C_output_file, compile_mode="optimized", 
             print("Sorry, compilation failed")
             sys.exit(1)
     elif compile_mode=="optimized":
-        compile_string = "gcc -Ofast -fopenmp -march=native -funroll-loops "+str(main_C_output_path)+" -o "+str(main_C_output_file)+" -lm"
+        compile_string = "gcc -std=c11 -Ofast -fopenmp -march=native -funroll-loops "+str(main_C_output_path)+" -o "+str(main_C_output_file)+" -lm"
         Execute_input_string(compile_string, os.devnull)
         # Check if executable exists (i.e., compile was successful), if not, try with more conservative compile flags.
         if not os.path.isfile(main_C_output_file):
             # Step 3.A: Revert to more compatible gcc compile option
             print("Most optimized compilation failed. Removing -march=native:")
-            compile_string = "gcc -Ofast -fopenmp -funroll-loops "+str(main_C_output_path)+" -o "+str(main_C_output_file)+" -lm"
+            compile_string = "gcc -std=c11 -Ofast -fopenmp -funroll-loops "+str(main_C_output_path)+" -o "+str(main_C_output_file)+" -lm"
             Execute_input_string(compile_string, os.devnull)
         if not os.path.isfile(main_C_output_file):
             # Step 3.B: Revert to maximally compatible gcc compile option
             print("Next-to-most optimized compilation failed. Moving to maximally-compatible gcc compile option:")
-            compile_string = "gcc -O2 "+str(main_C_output_path)+" -o "+str(main_C_output_file)+" -lm"
+            compile_string = "gcc -std=c11 -O2 "+str(main_C_output_path)+" -o "+str(main_C_output_file)+" -lm"
             Execute_input_string(compile_string, os.devnull)
         # Step 3.C: If there are still missing components within the compiler, say compilation failed
         if not os.path.isfile(main_C_output_file):
