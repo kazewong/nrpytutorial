@@ -40,13 +40,13 @@ def BSSN_RHSs():
     # Step 3a: Register indexed quantities, using ixp.register_... functions
     global hDD # Needed for setting detgammabar = detgammahat constraint, etc.
     hDD = ixp.register_gridfunctions_for_single_rank2("EVOL","hDD", "sym01")
-    global aDD # Needed for BSSN constraints, etc.
+    global aDD,vetU,betU # Needed for BSSN constraints, etc.
     aDD = ixp.register_gridfunctions_for_single_rank2("EVOL","aDD", "sym01")
     lambdaU = ixp.register_gridfunctions_for_single_rank1("EVOL","lambdaU")
     vetU = ixp.register_gridfunctions_for_single_rank1("EVOL","vetU")
     betU = ixp.register_gridfunctions_for_single_rank1("EVOL","betU")
     # Step 3b: Register scalar quantities, using gri.register_gridfunctions()
-    global trK, alpha # Needed as global for BSSN matter source terms, etc.
+    global trK,cf,alpha # Needed as global for BSSN matter source terms, etc.
     trK, cf, alpha = gri.register_gridfunctions("EVOL",["trK","cf","alpha"])
     Rtrace = gri.register_gridfunctions("EVOL",["Rtrace"])
 
