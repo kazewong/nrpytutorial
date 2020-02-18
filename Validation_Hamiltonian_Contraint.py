@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt 
 
-data = np.genfromtxt("BSSN_SF-output2D/quad_pot_2d_t-00000050.txt")
+data = np.genfromtxt("BSSN_SF-output2D/quad_pot_2d_t-00000000.txt")
 
 N1 = int(len(data[:,0])/4)
 
@@ -28,6 +28,9 @@ BCartU1  = data[:N1,18]
 BCartU2  = data[:N1,19]
 alphaCart = data[:N1,20]
 
+uu = data[:N1,21]
+vv = data[:N1,22]
+
 dx = x[1] - x[0]
 order = 2 
 dgammaCartDD00dr = np.gradient(gammaCartDD00,dx,edge_order = order)
@@ -45,15 +48,54 @@ d2gammaCartDD11dr2 = np.gradient(dgammaCartDD11dr,dx,edge_order = order)
 d2gammaCartDD12dr2 = np.gradient(dgammaCartDD12dr,dx,edge_order = order)
 d2gammaCartDD22dr2 = np.gradient(dgammaCartDD22dr,dx,edge_order = order)
 
+gammaDD = np.zeros((N1,3,3))
+KDD     = np.zeros((N1,3,3))
 
-R = (2*(dgammaCartDD00dr*dgammaCartDD12dr - 2*d2gammaCartDD12dr2*gammaCartDD00)*gammaCartDD12**3 + gammaCartDD12**2*(dgammaCartDD12dr**2*gammaCartDD00 + 3*dgammaCartDD11dr*dgammaCartDD22dr*gammaCartDD00 - 4*dgammaCartDD02dr*dgammaCartDD12dr*gammaCartDD01 + (-4*dgammaCartDD01dr*dgammaCartDD12dr + 8*d2gammaCartDD12dr2*gammaCartDD01)*gammaCartDD02 - dgammaCartDD00dr*dgammaCartDD22dr*gammaCartDD11 + 2*d2gammaCartDD22dr2*gammaCartDD00*gammaCartDD11 + (-(dgammaCartDD00dr*dgammaCartDD11dr) + 2*d2gammaCartDD11dr2*gammaCartDD00)*gammaCartDD22) + gammaCartDD11**2*(dgammaCartDD22dr**2*gammaCartDD00 - 2*dgammaCartDD02dr*dgammaCartDD22dr*gammaCartDD02 + 2*d2gammaCartDD22dr2*gammaCartDD02**2 + (dgammaCartDD00dr*dgammaCartDD22dr - 2*d2gammaCartDD22dr2*gammaCartDD00)*gammaCartDD22) + gammaCartDD11*(-(dgammaCartDD22dr**2*gammaCartDD01**2) + 2*dgammaCartDD12dr*dgammaCartDD22dr*gammaCartDD01*gammaCartDD02 + (-3*dgammaCartDD12dr**2 + 2*dgammaCartDD11dr*dgammaCartDD22dr)*gammaCartDD02**2 + (3*dgammaCartDD12dr**2*gammaCartDD00 - dgammaCartDD11dr*dgammaCartDD22dr*gammaCartDD00 - 2*dgammaCartDD01dr*dgammaCartDD22dr*gammaCartDD01 + 2*d2gammaCartDD22dr2*gammaCartDD01**2 - 2*dgammaCartDD02dr*dgammaCartDD11dr*gammaCartDD02 + 2*d2gammaCartDD11dr2*gammaCartDD02**2)*gammaCartDD22 + (dgammaCartDD00dr*dgammaCartDD11dr - 2*d2gammaCartDD11dr2*gammaCartDD00)*gammaCartDD22**2) + gammaCartDD22*(gammaCartDD01**2*(-3*dgammaCartDD12dr**2 + 2*dgammaCartDD11dr*dgammaCartDD22dr + 2*d2gammaCartDD11dr2*gammaCartDD22) + 2*dgammaCartDD11dr*gammaCartDD01*(dgammaCartDD12dr*gammaCartDD02 - dgammaCartDD01dr*gammaCartDD22) + dgammaCartDD11dr**2*(-gammaCartDD02**2 + gammaCartDD00*gammaCartDD22)) + 2*gammaCartDD12*(-2*dgammaCartDD12dr*dgammaCartDD22dr*gammaCartDD00*gammaCartDD11 + gammaCartDD02**2*(dgammaCartDD11dr*dgammaCartDD12dr - 2*d2gammaCartDD12dr2*gammaCartDD11) - 2*dgammaCartDD11dr*dgammaCartDD12dr*gammaCartDD00*gammaCartDD22 - dgammaCartDD00dr*dgammaCartDD12dr*gammaCartDD11*gammaCartDD22 + 2*d2gammaCartDD12dr2*gammaCartDD00*gammaCartDD11*gammaCartDD22 + gammaCartDD01**2*(dgammaCartDD12dr*dgammaCartDD22dr - 2*d2gammaCartDD12dr2*gammaCartDD22) + gammaCartDD01*(dgammaCartDD02dr*dgammaCartDD22dr*gammaCartDD11 + (dgammaCartDD02dr*dgammaCartDD11dr + 2*dgammaCartDD01dr*dgammaCartDD12dr)*gammaCartDD22) + gammaCartDD02*((dgammaCartDD12dr**2 - 3*dgammaCartDD11dr*dgammaCartDD22dr)*gammaCartDD01 + (2*dgammaCartDD02dr*dgammaCartDD12dr + dgammaCartDD01dr*dgammaCartDD22dr - 2*d2gammaCartDD22dr2*gammaCartDD01)*gammaCartDD11 + (dgammaCartDD01dr*dgammaCartDD11dr - 2*d2gammaCartDD11dr2*gammaCartDD01)*gammaCartDD22)))/(2.*(gammaCartDD02**2*gammaCartDD11 - 2*gammaCartDD01*gammaCartDD02*gammaCartDD12 + gammaCartDD01**2*gammaCartDD22 + gammaCartDD00*(gammaCartDD12**2 - gammaCartDD11*gammaCartDD22))**2)
+for i in range(N1):
+    gammaDD[i] =  np.array([[gammaCartDD00[i],gammaCartDD01[i],gammaCartDD02[i]],
+                            [gammaCartDD01[i],gammaCartDD11[i],gammaCartDD12[i]],
+                            [gammaCartDD02[i],gammaCartDD12[i],gammaCartDD22[i]]])
+    
+    KDD[i]     =  np.array([[KCartDD00[i],KCartDD01[i],KCartDD02[i]],
+                            [KCartDD01[i],KCartDD11[i],KCartDD12[i]],
+                            [KCartDD02[i],KCartDD12[i],KCartDD22[i]]])
 
-
-gammaDD = np.array([[gammaCartDD00,gammaCartDD01,gammaCartDD02],
-                    [gammaCartDD01,gammaCartDD11,gammaCartDD12],
-                    [gammaCartDD02,gammaCartDD12,gammaCartDD22]]
 
 gammaUU = np.linalg.inv(gammaDD)
+
+TrK = np.zeros(N1)
+
+for i in range(N1):
+    for k in range(3):
+        for d in range(3):
+            TrK[i] += KDD[i][k,d]*gammaUU[i][k,d]
+        
+KijKij = np.zeros(N1)
+for i in range(N1):
+    for k in range(3):
+        for d in range(3):
+            for l in range(3):
+                for m in range(3):
+                    KijKij[i] += KDD[i][k,d]*KDD[i][l,m]*gammaUU[i][k,l]*gammaUU[i][d,m]
+
+
+uu_dD = np.zeros((N1,3))
+
+vv2 = vv*vv
+psi2 = 0
+for i in range(DIM):
+    for j in range(DIM):
+        psi2 += gammaUU[i][j]*uu_dD[i]*uu_dD[j]
+    
+    # rho 
+rho = 0.5 * (vv2 + psi2) + Vofu        
+     
+
+
+print(gammaDD[0,:,:])
+    
+
+
 
 
 

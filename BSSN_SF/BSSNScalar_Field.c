@@ -21,15 +21,16 @@
 // Step P2a: set REAL=double, so that all floating point numbers are stored to at least ~16 significant digits.
 #define REAL double
 
+
 // Step P3: Set free parameters
 // Step P3a: Free parameters for the numerical grid
 
 // Spherical coordinates parameter
-const REAL RMAX    = 60.; /* Set to approximately the time you wish to evolve for, 
+const REAL RMAX    = 30.; /* Set to approximately the time you wish to evolve for, 
                             * so that at t=t_final data at the origin is not 
                             * affected by the boundary conditions */
 // Time coordinate parameters
-const REAL t_final =  10.;
+const REAL t_final =  50.;
 const REAL CFL_FACTOR = 0.5; // Set the CFL Factor
 
 // Step P3b: Free parameters for the spacetime evolution
@@ -121,10 +122,10 @@ REAL find_timestep(const int Nxx_plus_2NGHOSTS[3],const REAL dxx[3],REAL *xx[3],
 void initial_data(const int Nxx_plus_2NGHOSTS[3],REAL *xx[3], REAL *in_gfs) {
 
 // Step P11a: Declare initial data arrays
-FILE *uu_file = fopen("BSSN_SF/InitialData/phiBH1.csv", "r");
-FILE *vv_file = fopen("BSSN_SF/InitialData/PiBH1.csv", "r");
-FILE *psi_file = fopen("BSSN_SF/InitialData/psiBH1.csv", "r");
-FILE *alpha_file = fopen("BSSN_SF/InitialData/alphaBH1.csv", "r");
+FILE *uu_file = fopen("BSSN_SF/InitialData/phiCC9.csv", "r");
+FILE *vv_file = fopen("BSSN_SF/InitialData/PiCC9.csv", "r");
+FILE *psi_file = fopen("BSSN_SF/InitialData/psiCC9.csv", "r");
+FILE *alpha_file = fopen("BSSN_SF/InitialData/alphaCC9.csv", "r");
 
 int temp;
 int alen = 0;
@@ -203,6 +204,8 @@ void Hamiltonian_constraint(const int Nxx[3],const int Nxx_plus_2NGHOSTS[3],cons
 void rhs_eval(const int Nxx[3],const int Nxx_plus_2NGHOSTS[3],const REAL dxx[3], REAL *xx[3], const REAL *in_gfs,REAL *rhs_gfs) {
 #include "BSSN_RHSs.h"
 }
+
+#include "ID_array_ADM.h"  
 
 // main() function:
 // Step 0: Read command-line input, set up grid structure, allocate memory for gridfunctions, set up coordinates
@@ -337,7 +340,7 @@ int main(int argc, const char *argv[]) {
     apply_bcs(Nxx, Nxx_plus_2NGHOSTS, bc_gz_map,bc_parity_conditions, evol_gfs);
     enforce_detgammabar_constraint(Nxx_plus_2NGHOSTS, xx, evol_gfs);
     /* Output the solution of the scalar field and the conformal factor at diffrent time slices on a 2D grid */
-    if(n%50 == 0) {
+    if(n%10 == 0) {
         char filename[100];
         sprintf(filename,"BSSN_SF-output2D/quad_pot_2d_t-%08d.txt",n);
         FILE *out2D = fopen(filename, "w");
@@ -351,12 +354,18 @@ int main(int argc, const char *argv[]) {
            REAL xCart[3];
 #include "xxCart.h"
            int idx = IDX3(i0,i1,i2);
-           fprintf(out2D,"%e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e\n",xx0, evol_gfs[IDX4pt(UUGF,idx)],evol_gfs[IDX4pt(CFGF,idx)],aux_gfs[IDX4pt(HGF,idx)],
-            evol_gfs[IDX4pt(HDD00GF,idx)],evol_gfs[IDX4pt(HDD01GF,idx)],evol_gfs[IDX4pt(HDD02GF,idx)],
-            evol_gfs[IDX4pt(HDD11GF,idx)],evol_gfs[IDX4pt(HDD12GF,idx)],evol_gfs[IDX4pt(HDD22GF,idx)],
-            evol_gfs[IDX4pt(TRKGF,idx)],
-            evol_gfs[IDX4pt(ADD00GF,idx)],evol_gfs[IDX4pt(ADD01GF,idx)],evol_gfs[IDX4pt(ADD02GF,idx)],
-            evol_gfs[IDX4pt(ADD11GF,idx)],evol_gfs[IDX4pt(ADD12GF,idx)],evol_gfs[IDX4pt(ADD22GF,idx)],evol_gfs[IDX4pt(CFGF,idx)]);
+             ADMCart_ID(out2D, n*(double)dt , xx0, xx1, xx2, xCart[0], xCart[1], xCart[2],    
+                        evol_gfs[IDX4pt(HDD00GF,idx)], evol_gfs[IDX4pt(HDD01GF,idx)], evol_gfs[IDX4pt(HDD02GF,idx)],
+                        evol_gfs[IDX4pt(HDD11GF,idx)], evol_gfs[IDX4pt(HDD12GF,idx)], evol_gfs[IDX4pt(HDD22GF,idx)],
+                        evol_gfs[IDX4pt(ADD00GF,idx)], evol_gfs[IDX4pt(ADD01GF,idx)], evol_gfs[IDX4pt(ADD02GF,idx)],
+                        evol_gfs[IDX4pt(ADD11GF,idx)], evol_gfs[IDX4pt(ADD12GF,idx)], evol_gfs[IDX4pt(ADD22GF,idx)], 
+                        evol_gfs[IDX4pt(TRKGF,idx)], 
+                        evol_gfs[IDX4pt(LAMBDAU0GF,idx)],evol_gfs[IDX4pt(LAMBDAU1GF,idx)],evol_gfs[IDX4pt(LAMBDAU2GF,idx)],
+                        evol_gfs[IDX4pt(VETU0GF,idx)],evol_gfs[IDX4pt(VETU1GF,idx)],evol_gfs[IDX4pt(VETU2GF,idx)], 
+                        evol_gfs[IDX4pt(BETU0GF,idx)],evol_gfs[IDX4pt(BETU1GF,idx)],evol_gfs[IDX4pt(BETU2GF,idx)],  
+                        evol_gfs[IDX4pt(ALPHAGF,idx)],evol_gfs[IDX4pt(CFGF,idx)]); 
+                        
+                        
          }
          fclose(out2D);
     }

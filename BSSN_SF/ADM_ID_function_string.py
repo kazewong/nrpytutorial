@@ -14,7 +14,8 @@ def ADM_ID_function_string(gammaCartDD,KCartDD,alphaCart,betaCartU,BCartU):
     returnstring += "\tdouble lambdaU0,double lambdaU1,double lambdaU2,\n"
     returnstring += "\tdouble vetU0,double vetU1,double vetU2,\n"
     returnstring += "\tdouble betU0,double betU1,double betU2,\n"
-    returnstring += "\tdouble alpha,double cf) {\n"
+    returnstring += "\tdouble alpha,double cf, \n "
+    returnstring += "\tdouble uu ,double vv) {\n"
     returnstring += "\tdouble gammaCartDD00;\n "
     returnstring += "\tdouble gammaCartDD01;\n "
     returnstring += "\tdouble gammaCartDD02;\n "
@@ -47,11 +48,12 @@ def ADM_ID_function_string(gammaCartDD,KCartDD,alphaCart,betaCartU,BCartU):
                             params="preindent=1,CSE_enable=True,outCverbose=False",  # outCverbose=False to prevent
                             # enormous output files.
                             prestring="", poststring="")
-    returnstring += 'fprintf(out2D,"%e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e  \\n", \n '
-    returnstring += '       time, Cartxyz0, gammaCartDD00, gammaCartDD01, gammaCartDD02, gammaCartDD11, gammaCartDD12, gammaCartDD22,  \n '
+    returnstring += '       fprintf(out2D,"%e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e  \\n", \n '
+    returnstring += '       time, xx0, gammaCartDD00, gammaCartDD01, gammaCartDD02, gammaCartDD11, gammaCartDD12, gammaCartDD22,  \n '
     returnstring += '       KCartDD00, KCartDD01, KCartDD02, KCartDD11, KCartDD12, KCartDD22,  \n '
     returnstring += '       betaCartU0, betaCartU1, betaCartU2, \n '
     returnstring += '       BCartU0, BCartU1, BCartU2, \n '
-    returnstring += '       alphaCart); \n '
+    returnstring += '       alphaCart, \n'
+    returnstring += '       uu, vv ); \n '
     returnstring += "}\n"
     return returnstring
