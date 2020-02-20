@@ -48,8 +48,8 @@ def ADM_ID_function_string(gammaCartDD,KCartDD,alphaCart,betaCartU,BCartU):
                             params="preindent=1,CSE_enable=True,outCverbose=False",  # outCverbose=False to prevent
                             # enormous output files.
                             prestring="", poststring="")
-    returnstring += '       fprintf(out2D,"%e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e  \\n", \n '
-    returnstring += '       time, xx0, gammaCartDD00, gammaCartDD01, gammaCartDD02, gammaCartDD11, gammaCartDD12, gammaCartDD22,  \n '
+    returnstring += '       fprintf(out2D,"%e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e %e  \\n", \n '
+    returnstring += '       time, Cartxyz0, Cartxyz1, Cartxyz2,  gammaCartDD00, gammaCartDD01, gammaCartDD02, gammaCartDD11, gammaCartDD12, gammaCartDD22,  \n '
     returnstring += '       KCartDD00, KCartDD01, KCartDD02, KCartDD11, KCartDD12, KCartDD22,  \n '
     returnstring += '       betaCartU0, betaCartU1, betaCartU2, \n '
     returnstring += '       BCartU0, BCartU1, BCartU2, \n '
