@@ -363,7 +363,8 @@ int main(int argc, const char *argv[]) {
                         evol_gfs[IDX4pt(LAMBDAU0GF,idx)],evol_gfs[IDX4pt(LAMBDAU1GF,idx)],evol_gfs[IDX4pt(LAMBDAU2GF,idx)],
                         evol_gfs[IDX4pt(VETU0GF,idx)],evol_gfs[IDX4pt(VETU1GF,idx)],evol_gfs[IDX4pt(VETU2GF,idx)], 
                         evol_gfs[IDX4pt(BETU0GF,idx)],evol_gfs[IDX4pt(BETU1GF,idx)],evol_gfs[IDX4pt(BETU2GF,idx)],  
-                        evol_gfs[IDX4pt(ALPHAGF,idx)],evol_gfs[IDX4pt(CFGF,idx)]); 
+                        evol_gfs[IDX4pt(ALPHAGF,idx)],evol_gfs[IDX4pt(CFGF,idx)],
+                        evol_gfs[IDX4pt(UUGF,idx)],evol_gfs[IDX4pt(VVGF,idx)]); 
                         
                         
          }
